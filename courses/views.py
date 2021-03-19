@@ -35,3 +35,9 @@ class LessonAPIView(generics.ListCreateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     lookup_field = 'id'
+
+
+class LessonDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = LessonSerializer
+    queryset = Lesson.objects.all()
+    lookup_field = 'id'
