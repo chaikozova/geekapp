@@ -1,5 +1,4 @@
-from rest_framework import generics, mixins
-from rest_framework.response import Response
+from rest_framework import generics
 
 from courses.models import Course, Level, Lesson
 from courses.serializers import CourseSerializer, LevelSerializer, LessonSerializer

@@ -1,4 +1,3 @@
-from django.db.models import Count
 from rest_framework import serializers
 
 from courses.models import Course, Level, Lesson
@@ -69,7 +68,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('id', 'logo', 'title', 'description', 'level', 'levels_count')
+        fields = ('id', 'logo', 'color', 'title', 'description', 'level', 'levels_count')
 
     def update(self, instance, validated_data):
         level_data = validated_data.pop('level')
@@ -78,6 +77,7 @@ class CourseSerializer(serializers.ModelSerializer):
         instance.logo = validated_data.get('logo')
         instance.title = validated_data.get('title')
         instance.description = validated_data.get('description')
+        instance.color = validated_data.get('color')
         instance.save()
 
         for level_data in level_data:

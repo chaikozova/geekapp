@@ -5,12 +5,14 @@ from users.models import User
 
 class Course(models.Model):
     class Meta:
-        verbose_name='Курс'
-        verbose_name_plural='Курсы'
+        verbose_name = 'Курс'
+        verbose_name_plural = 'Курсы'
     logo = models.ImageField(upload_to='media', max_length=240, blank=True, null=True)
     title = models.CharField(max_length=240)
     description = models.TextField(null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='courses')
+    color = models.CharField(max_length=100, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL,
+                             null=True, blank=True, related_name='user_courses')
 
     @property
     def levels_count(self):
