@@ -14,6 +14,9 @@ class Course(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL,
                              null=True, blank=True, related_name='courses')
 
+    def __str__(self):
+        return self.title
+
     @property
     def levels_count(self):
         levels = Level.objects.filter(course=self.pk)
@@ -34,6 +37,9 @@ class Level(models.Model):
     course = models.ForeignKey(Course, on_delete=models.SET_NULL,
                                null=True, related_name='level')
 
+    def __str__(self):
+        return self.title
+
     @property
     def lessons_count(self):
         lessons = Lesson.objects.filter(level=self.pk)
@@ -50,3 +56,6 @@ class Lesson(models.Model):
     level = models.ForeignKey(Level, on_delete=models.SET_NULL, null=True, related_name='lessons')
     video_url = models.URLField(null=True, blank=True)
     material_url = ArrayField(models.CharField(max_length=250,null=True, blank=True), size=5, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
