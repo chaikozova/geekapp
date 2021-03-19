@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'users',
     'events',
     'courses',
-    'shortuuid',
 ]
 
 MIDDLEWARE = [
