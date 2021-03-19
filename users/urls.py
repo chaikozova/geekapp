@@ -6,4 +6,5 @@ urlpatterns = [
     path('api/logout/', user_views.LogoutView.as_view(), name='logout'),
     path('api/user-create/', user_views.UserRegistrationView.as_view(), name='user-create'),
     path('api/user/<int:pk>/', user_views.UserRetrieveUpdateDeleteAPIView.as_view(), name='user'),
+    path('api/request/', user_views.RequestAPIView.as_view(), name='user'),
 ]
