@@ -1,4 +1,9 @@
+import shortuuid
 from django.http import Http404
+from rest_framework.decorators import api_view
+from rest_framework.exceptions import ValidationError
+from rest_framework.generics import get_object_or_404
+
 from .serializers import UserRegistrationSerializer, LoginSerializer,\
     UserListSerializer, UserRetrieveUpdateDeleteSerializer
 from django.core.exceptions import ObjectDoesNotExist
@@ -79,3 +84,24 @@ class UserRetrieveUpdateDeleteAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["PATCH"])
+def reset_user_password(request):
+    """
+    Changing user password
+    """
+
+    user_id = request.data.get('user_id', None)
+    if not user_id:
+        return Response({"error": "Need users id to reset password"}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = get_object_or_404(User, pk=user_id)
+    password = str(shortuuid.uuid())[:8]
+    password2 = str(shortuuid.uuid())[:8]
+    if password != password2:
+        raise ValidationError({'password': 'Passwords must match'})
+    else:
+        user.set_password(password)
+        user.save()
+        return Response({"message": "successfuly updated user password"}, status=status.HTTP_200_OK)
