@@ -12,7 +12,7 @@ class Course(models.Model):
     description = models.TextField(null=True, blank=True)
     color = models.CharField(max_length=100, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL,
-                             null=True, blank=True, related_name='user_courses')
+                             null=True, blank=True, related_name='courses')
 
     @property
     def levels_count(self):
