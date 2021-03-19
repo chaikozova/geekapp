@@ -8,4 +8,5 @@ urlpatterns = [
     path('api/user/<int:pk>/', user_views.UserRetrieveUpdateDeleteAPIView.as_view(), name='user'),
     path('api/user/', user_views.UserListView.as_view(), name='user-list'),
     path('api/request/', user_views.RequestAPIView.as_view(), name='user-list'),
+  
 ]

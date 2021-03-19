@@ -58,9 +58,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class UserListSerializer(serializers.ModelSerializer):
+    courses = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'course',
+        fields = ('id', 'email', 'first_name', 'last_name', 'courses',
                   'phone_number', 'telegram', 'instagram', 'github',
                   'is_staff')
         read_only_fields = ('created',)
@@ -75,9 +77,11 @@ class TeacherSerializer(serializers.Serializer):
 
 
 class UserRetrieveUpdateDeleteSerializer(serializers.ModelSerializer):
+    courses = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name',
+        fields = ('id', 'email', 'first_name', 'last_name', 'courses',
                   'phone_number', 'telegram', 'instagram', 'github',
                   'image')
         read_only_fields = ('created',)
