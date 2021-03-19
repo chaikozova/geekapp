@@ -21,6 +21,9 @@ class Event(models.Model):
 
 
 class Comment(models.Model):
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментария'
     comment = models.TextField(null=True)
     created = models.DateTimeField(auto_now_add=True,
                                    null=True)
