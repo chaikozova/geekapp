@@ -23,11 +23,10 @@ class LessonSerializer(serializers.ModelSerializer):
 class LevelSerializer(serializers.ModelSerializer):
     lessons = LessonSerializer(read_only=True, many=True)
     teacher = TeacherSerializer(read_only=True)
-    #lessons_count = Lesson.objects.annotate(Count('level'))
 
     class Meta:
         model = Level
-        fields = ('id', 'title', 'image', 'teacher', 'lessons', 'lessons_count')
+        fields = ('id', 'title', 'image', 'teacher', 'lessons')
 
     # def create(self, validated_data):
     #     lesson_data = validated_data.pop('lessons')
@@ -68,7 +67,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('id', 'logo', 'color', 'title', 'description', 'level', 'levels_count')
+        fields = ('id', 'logo', 'color', 'title', 'description', 'level')
 
     def update(self, instance, validated_data):
         level_data = validated_data.pop('level')

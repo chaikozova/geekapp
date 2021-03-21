@@ -1,7 +1,7 @@
 from rest_framework import generics, mixins
 
 from events.models import Event, Comment
-from events.serializers import EventSerializer, CommentSerializer
+from events.serializers import EventSerializer, CommentSerializer, EventDetailSerializer
 
 
 class EventAPIView(generics.GenericAPIView,
@@ -19,7 +19,7 @@ class EventAPIView(generics.GenericAPIView,
 
 
 class EventDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = EventSerializer
+    serializer_class = EventDetailSerializer
     queryset = Event.objects.all()
     lookup_field = 'id'
 

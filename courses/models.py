@@ -17,10 +17,10 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
-    @property
-    def levels_count(self):
-        levels = Level.objects.filter(course=self.pk)
-        return levels.count()
+    # @property
+    # def levels_count(self):
+    #     levels = Level.objects.filter(course=self.pk)
+    #     return levels.count()
 
 
 class Level(models.Model):
@@ -40,10 +40,10 @@ class Level(models.Model):
     def __str__(self):
         return self.title
 
-    @property
-    def lessons_count(self):
-        lessons = Lesson.objects.filter(level=self.pk)
-        return lessons.count()
+    # @property
+    # def lessons_count(self):
+    #     lessons = Lesson.objects.filter(level=self.pk)
+    #     return lessons.count()
 
 
 class Lesson(models.Model):

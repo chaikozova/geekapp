@@ -32,7 +32,7 @@ class EventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ('id', 'image', 'title', 'description', 'ratting', 'created', 'date_of_event', 'location', 'comments')
+        fields = ('id', 'image', 'title', 'description', 'ratting', 'date_of_event', 'location', 'comments')
 
     def create(self, validated_data):
         return Event.objects.create(**validated_data)
@@ -55,3 +55,10 @@ class EventSerializer(serializers.ModelSerializer):
         #     comment.created = comments_data.get('created')
         #     comment.save()
         # return instance
+
+
+class EventDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Event
+        fields = ('id', 'title', 'date_of_event', 'image')
