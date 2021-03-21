@@ -4,18 +4,10 @@ from events.models import Event, Comment
 from events.serializers import EventSerializer, CommentSerializer, EventDetailSerializer
 
 
-class EventAPIView(generics.GenericAPIView,
-                   mixins.ListModelMixin,
-                   mixins.CreateModelMixin):
+class EventAPIView(generics.ListCreateAPIView):
     serializer_class = EventSerializer
     queryset = Event.objects.all()
     lookup_field = 'id'
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
 
 
 class EventDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
