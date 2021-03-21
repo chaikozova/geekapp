@@ -28,11 +28,10 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(read_only=True, many=True)
 
     class Meta:
         model = Event
-        fields = ('id', 'image', 'title', 'description', 'ratting', 'date_of_event', 'location', 'comments')
+        fields = ('id', 'title', 'date_of_event', 'image')
 
     def create(self, validated_data):
         return Event.objects.create(**validated_data)
@@ -58,7 +57,8 @@ class EventSerializer(serializers.ModelSerializer):
 
 
 class EventDetailSerializer(serializers.ModelSerializer):
+    comments = CommentSerializer(read_only=True, many=True)
 
     class Meta:
         model = Event
-        fields = ('id', 'title', 'date_of_event', 'image')
+        fields = ('id', 'image', 'title', 'description', 'ratting', 'date_of_event', 'location', 'comments')
