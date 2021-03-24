@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import User
+
 
 class Event(models.Model):
     class Meta:
@@ -23,11 +25,10 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментария'
+        ordering = ['created']
     comment = models.TextField(null=True)
-    created = models.DateTimeField(auto_now_add=True,
-                                   null=True)
+    created = models.DateTimeField(auto_now_add=True,null=True)
     rate = models.IntegerField(null=True, blank=True)
-    events = models.ForeignKey(Event,
-                               on_delete=models.SET_NULL,
-                               null=True,
-                               related_name='comments')
+    events = models.ForeignKey(Event, on_delete=models.SET_NULL,
+                               null=True, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='comments')
