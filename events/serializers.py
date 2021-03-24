@@ -3,14 +3,16 @@ from decimal import Decimal
 from django.db.models import Avg
 from rest_framework import serializers
 from events.models import Event, Comment
+from users.models import User
 
 
 class CommentSerializer(serializers.ModelSerializer):
     events = serializers.PrimaryKeyRelatedField(queryset=Event.objects.all())
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Comment
-        fields = ('id', 'comment', 'rate', 'created', 'events')
+        fields = ('id', 'comment', 'rate', 'created', 'events', 'user')
 
     def create(self, validated_data):
         comment = Comment.objects.create(**validated_data)
@@ -58,7 +60,9 @@ class EventSerializer(serializers.ModelSerializer):
 
 class EventDetailSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(read_only=True, many=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Event
-        fields = ('id', 'image', 'title', 'description', 'ratting', 'date_of_event', 'location', 'comments')
+        fields = ('id', 'image', 'title', 'description', 'ratting',
+                  'date_of_event', 'location', 'user', 'comments')
