@@ -26,7 +26,7 @@ class Comment(models.Model):
     comment = models.TextField(null=True)
     created = models.DateTimeField(auto_now_add=True,
                                    null=True)
-    rate = models.IntegerField()
+    rate = models.IntegerField(null=True, blank=True)
     events = models.ForeignKey(Event,
                                on_delete=models.SET_NULL,
                                null=True,
