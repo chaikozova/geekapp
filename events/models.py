@@ -10,7 +10,7 @@ class Event(models.Model):
     description = models.TextField()
     date_of_event = models.DateTimeField()
     location = models.CharField(max_length=255)
-    ratting = models.DecimalField(max_digits=2, decimal_places=1)
+    ratting = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True)
 
     def __str__(self):
         return self.title
