@@ -68,6 +68,13 @@ class UserListSerializer(serializers.ModelSerializer):
         read_only_fields = ('created',)
 
 
+class UserShortInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'image')
+    read_only_fields = ('created',)
+
+
 class TeacherSerializer(serializers.Serializer):
     email = serializers.CharField(read_only=True)
     first_name = serializers.CharField(read_only=True)
