@@ -4,11 +4,12 @@ from django.db.models import Avg
 from rest_framework import serializers
 from events.models import Event, Comment
 from users.models import User
+from users.serializers import UserShortInfoSerializer
 
 
 class CommentSerializer(serializers.ModelSerializer):
     events = serializers.PrimaryKeyRelatedField(queryset=Event.objects.all())
-    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = UserShortInfoSerializer(read_only=True)
 
     class Meta:
         model = Comment
