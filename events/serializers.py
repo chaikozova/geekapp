@@ -10,6 +10,7 @@ from users.serializers import UserShortInfoSerializer
 class CommentSerializer(serializers.ModelSerializer):
     events = serializers.PrimaryKeyRelatedField(queryset=Event.objects.all())
     user = UserShortInfoSerializer(read_only=True)
+    created = serializers.DateTimeField(format="%d.%m.%Y - %H:%M:%S")
 
     class Meta:
         model = Comment
@@ -57,8 +58,7 @@ class EventSerializer(serializers.ModelSerializer):
 class EventDetailSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(read_only=True, many=True)
     user = serializers.PrimaryKeyRelatedField(read_only=True)
-    date_of_event = serializers.DateTimeField(format="%d.%m.%Y% - %H:%M:%S")
-
+    date_of_event = serializers.DateTimeField(format="%d.%m.%Y - %H:%M:%S")
 
     class Meta:
         model = Event
