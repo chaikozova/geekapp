@@ -10,7 +10,7 @@ class Event(models.Model):
     image = models.ImageField(upload_to='media', max_length=240, blank=True)
     title = models.CharField(max_length=255)
     description = models.TextField()
-    date_of_event = models.DateTimeField()
+    date_of_event = models.DateTimeField(auto_now_add=True)
     location = models.CharField(max_length=255)
     dop_location = models.CharField(max_length=255, null=True, blank=True)
 
