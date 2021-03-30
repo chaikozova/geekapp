@@ -12,13 +12,23 @@ class Event(models.Model):
     description = models.TextField()
     date_of_event = models.DateTimeField()
     location = models.CharField(max_length=255)
-    ratting = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True)
+    dop_location = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.title
 
     def view_comments(self):
         return Comment.objects.filter(comments=self)
+
+    @property
+    def rating_average(self):
+        rating = self.comments.aggregate(models.Avg('rate')).get('rate__avg')
+        rating = float("{:.1f}".format(rating))
+        return rating
+
+    @property
+    def comments_count(self):
+        return self.comments.count()
 
 
 class Comment(models.Model):
@@ -32,3 +42,6 @@ class Comment(models.Model):
     events = models.ForeignKey(Event, on_delete=models.SET_NULL,
                                null=True, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='comments')
+
+    def __str__(self):
+        return f'{self.events.title} - {self.comment}'

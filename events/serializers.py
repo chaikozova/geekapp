@@ -16,13 +16,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ('id', 'comment', 'rate', 'created', 'events', 'user')
 
     def create(self, validated_data):
-        comment = Comment.objects.create(**validated_data)
-        event = Event.objects.get()
-        avg = Comment.objects.all().aggregate(Avg('rate'))
-        print(avg)
-        event.ratting = Decimal(avg['rate__avg'])
-        event.save()
-        return comment
+        return Comment.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.comment = validated_data.get('comment')
@@ -31,10 +25,11 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
+    date_of_event = serializers.DateTimeField(format="%d.%m.%Y% - %H:%M:%S")
 
     class Meta:
         model = Event
-        fields = ('id', 'title', 'date_of_event', 'image')
+        fields = ('id', 'title', 'date_of_event', 'rating_average', 'image')
 
     def create(self, validated_data):
         return Event.objects.create(**validated_data)
@@ -62,8 +57,10 @@ class EventSerializer(serializers.ModelSerializer):
 class EventDetailSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(read_only=True, many=True)
     user = serializers.PrimaryKeyRelatedField(read_only=True)
+    date_of_event = serializers.DateTimeField(format="%d.%m.%Y% - %H:%M:%S")
+
 
     class Meta:
         model = Event
-        fields = ('id', 'image', 'title', 'description', 'ratting',
-                  'date_of_event', 'location', 'user', 'comments')
+        fields = ('id', 'image', 'title', 'description', 'rating_average',
+                  'date_of_event', 'location', 'dop_location', 'user', 'comments')

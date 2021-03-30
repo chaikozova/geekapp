@@ -4,7 +4,7 @@ from courses.models import Course, Level, Lesson
 from users.serializers import TeacherSerializer
 
 
-class LessonSerializer(serializers.ModelSerializer):
+class LessonDetailSerializer(serializers.ModelSerializer):
     level = serializers.PrimaryKeyRelatedField(queryset=Level.objects.all())
 
     class Meta:
@@ -20,7 +20,14 @@ class LessonSerializer(serializers.ModelSerializer):
     #     return instance
 
 
-class LevelSerializer(serializers.ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Lesson
+        fields = ('title', )
+
+
+class LevelDetailSerializer(serializers.ModelSerializer):
     lessons = LessonSerializer(read_only=True, many=True)
     teacher = TeacherSerializer(read_only=True)
 
@@ -55,19 +62,26 @@ class LevelSerializer(serializers.ModelSerializer):
         return instance
 
 
-class LevelForCourseSerializer(serializers.ModelSerializer):
+class LevelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Level
-        fields = ('id', 'title', 'image')
+        fields = ('title', )
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    level = LevelForCourseSerializer(read_only=False, many=True)
 
     class Meta:
         model = Course
-        fields = ('id', 'logo', 'color', 'title', 'description', 'level')
+        fields = ('id', 'logo', 'color', 'title')
+
+
+class CourseDetailSerializer(serializers.ModelSerializer):
+    level = LevelSerializer(read_only=False, many=True)
+
+    class Meta:
+        model = Course
+        fields = ('id', 'logo', 'title', 'description', 'level')
 
     def update(self, instance, validated_data):
         level_data = validated_data.pop('level')

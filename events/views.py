@@ -16,9 +16,10 @@ class EventDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
 
 
-class CommentView(generics.ListCreateAPIView):
+class CommentsView(generics.ListCreateAPIView):
     """
     Bla bla
     """
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
+    lookup_field = 'id'

@@ -1,7 +1,8 @@
 from rest_framework import generics
 
 from courses.models import Course, Level, Lesson
-from courses.serializers import CourseSerializer, LevelSerializer, LessonSerializer
+from courses.serializers import CourseSerializer, LevelDetailSerializer, LessonSerializer, CourseDetailSerializer, \
+    LessonDetailSerializer, LevelSerializer
 
 
 class CourseAPIView(generics.ListCreateAPIView):
@@ -11,7 +12,7 @@ class CourseAPIView(generics.ListCreateAPIView):
 
 
 class CourseDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = CourseSerializer
+    serializer_class = CourseDetailSerializer
     queryset = Course.objects.all()
     lookup_field = 'id'
 
@@ -23,7 +24,7 @@ class LevelAPIView(generics.ListCreateAPIView):
 
 
 class LevelDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = LevelSerializer
+    serializer_class = LevelDetailSerializer
     queryset = Level.objects.all()
     lookup_field = "id"
 
@@ -38,6 +39,6 @@ class LessonAPIView(generics.ListCreateAPIView):
 
 
 class LessonDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = LessonSerializer
+    serializer_class = LessonDetailSerializer
     queryset = Lesson.objects.all()
     lookup_field = 'id'
