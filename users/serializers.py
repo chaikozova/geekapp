@@ -1,4 +1,6 @@
 from django.contrib.auth import authenticate
+from django.contrib.auth.password_validation import validate_password
+
 from .models import User, Request
 from rest_framework import serializers
 
@@ -57,6 +59,52 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
+    old_password = serializers.CharField(write_only=True, required=True)
+
+    class Meta:
+        model = User
+        fields = ('old_password', 'password', 'password2')
+
+    # def validate(self, attrs):
+    #     if attrs['password'] != attrs['password2']:
+    #         raise serializers.ValidationError({'password': "Password fields didn't match."})
+    #
+    #     return attrs
+    #
+    # def validate_old_password(self, value):
+    #     user = self.context['request'].user
+    #     if not user.check_password(value):
+    #         raise serializers.ValidationError({'password': "Old password is not correct."})
+    #
+    #     return value
+
+    def update(self, instance, validated_data):
+        instance.password = validated_data.get('password', instance.password)
+
+        if not validated_data['password']:
+            raise serializers.ValidationError({'new_password': 'not found'})
+
+        if not validated_data['old_password']:
+            raise serializers.ValidationError({'old_password': 'not found'})
+
+        if not instance.check_password(validated_data['old_password']):
+            raise serializers.ValidationError({'old_password': 'wrong password'})
+
+        if validated_data['password'] != validated_data['password2']:
+            raise serializers.ValidationError({'passwords': "Passwords do not match."})
+
+        if validated_data['password'] == validated_data['password2'] and instance.check_password(validated_data['old_password']):
+            print(instance.password)
+            instance.set_password(validated_data['password'])
+            print(instance.password)
+            instance.save()
+            return instance
+        return instance
+
+
 class UserListSerializer(serializers.ModelSerializer):
     courses = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
@@ -72,6 +120,7 @@ class UserShortInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'image')
+
     read_only_fields = ('created',)
 
 
