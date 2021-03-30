@@ -25,7 +25,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
-    date_of_event = serializers.DateTimeField(format="%d.%m.%Y% - %H:%M:%S")
+    date_of_event = serializers.DateTimeField(format="%d.%m.%Y - %H:%M:%S")
 
     class Meta:
         model = Event
