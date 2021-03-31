@@ -79,6 +79,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'geek.wsgi.application'
 
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'users.hashers.PBKDF2WrappedSHA1PasswordHasher',
+]
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
