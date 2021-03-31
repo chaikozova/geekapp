@@ -2,7 +2,7 @@ from django.http import Http404
 
 
 from .serializers import UserRegistrationSerializer, LoginSerializer, \
-    UserListSerializer, UserRetrieveUpdateDeleteSerializer, RequestSerializer
+    UserListSerializer, UserRetrieveUpdateDeleteSerializer, RequestSerializer, ChangePasswordSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, generics, mixins
 from rest_framework.authtoken.models import Token
@@ -50,6 +50,15 @@ class UserRegistrationView(APIView):
             serializer.save()
             return Response({"successful": True}, status=status.HTTP_201_CREATED)
         return Response({"successful": False, **serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ChangePasswordView(generics.UpdateAPIView):
+    """
+    View for password reset
+    """
+    queryset = User.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = ChangePasswordSerializer
 
 
 class UserListView(APIView):
