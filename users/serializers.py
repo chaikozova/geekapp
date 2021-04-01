@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 
+from .mentor_comment import MentorComment
 from .models import User, Request
 from rest_framework import serializers
 
@@ -168,3 +169,20 @@ class RequestSerializer(serializers.ModelSerializer):
             file=validated_data.get('file', None),
         )
         return request
+
+class MentorCommentSerializer(serializers.ModelSerializer):
+    mentor_comment = UserShortInfoSerializer(read_only=True)
+    users_comment = UserShortInfoSerializer(read_only=True, many=True)
+    created = serializers.DateTimeField(format="%d.%m.%Y - %H:%M:%S")
+
+    class Meta:
+        model = MentorComment
+        fields = ('id', 'comment', 'created', 'rate', 'users', 'users_comment', 'mentor', 'mentor_comment')
+
+    def create(self, validated_data):
+        return MentorComment.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.comment = validated_data.get('comment')
+        instance.created = validated_data.get('created')
+        return instance

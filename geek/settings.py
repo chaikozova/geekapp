@@ -97,8 +97,8 @@ PASSWORD_HASHERS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'geekapp',
-        'USER': 'geekappuser',
+        'NAME': 'geekmentorcomment',
+        'USER': 'geekmentorcommentuser',
         'PASSWORD': 'password',
         'HOST': '127.0.0.1',
         'PORT': '5432',
