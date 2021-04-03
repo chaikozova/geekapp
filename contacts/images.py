@@ -20,3 +20,4 @@ image_cropped.show()
 
 img = image.filter(ImageFilter.CONTOUR)
 img.show()
+
