@@ -12,3 +12,9 @@ class Contact(models.Model):
     url = models.CharField("Сайт", max_length=150, blank=True, null=True)
 
 
+class QuestionAndAnswer(models.Model):
+    class Meta:
+        verbose_name = 'Вопрос-Ответ'
+        verbose_name_plural = 'Вопросы-Ответы'
+    question_text = models.CharField(max_length=250, null=True, blank=True)
+    answer_text = models.TextField(null=True, blank=True)

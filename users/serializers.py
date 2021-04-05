@@ -170,6 +170,7 @@ class RequestSerializer(serializers.ModelSerializer):
         )
         return request
 
+
 class MentorCommentSerializer(serializers.ModelSerializer):
     mentor_comment = UserShortInfoSerializer(read_only=True)
     users_comment = UserShortInfoSerializer(read_only=True, many=True)

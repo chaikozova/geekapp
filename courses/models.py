@@ -28,6 +28,7 @@ class Level(models.Model):
         verbose_name = 'Месяц'
         verbose_name_plural = 'Месяцы'
     title = models.CharField(max_length=150, null=True)
+    level_number = models.IntegerField()
     teacher = models.ForeignKey(User,
                                 on_delete=models.SET_NULL,
                                 null=True,
