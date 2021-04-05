@@ -19,14 +19,19 @@ class CourseDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 class LevelAPIView(generics.ListCreateAPIView):
     serializer_class = LevelSerializer
-    queryset = Level.objects.all()
-    lookup_field = "id"
+
+    def get_queryset(self):
+        course = self.kwargs['id']
+        return Level.objects.filter(course_id=course)
 
 
 class LevelDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LevelDetailSerializer
-    queryset = Level.objects.all()
-    lookup_field = "id"
+
+    def get_queryset(self):
+        course_id = self.kwargs['id']
+        level_id = self.kwargs['pk']
+        return Level.objects.filter(pk=level_id, course_id=course_id)
 
 
 class LessonAPIView(generics.ListCreateAPIView):
@@ -34,17 +39,20 @@ class LessonAPIView(generics.ListCreateAPIView):
     List of lessons in 1 month
     """
     serializer_class = LessonSerializer
-    queryset = Lesson.objects.all()
-    lookup_field = 'id'
+
+    def get_queryset(self):
+        level = self.kwargs['pk']
+        return Lesson.objects.filter(level_id=level)
+
+
+
 
 
 class LessonDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LessonDetailSerializer
-    queryset = Lesson.objects.all()
-    lookup_field = 'id'
 
 
-class LessonDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = LessonDetailSerializer
-    queryset = Lesson.objects.all()
-    lookup_field = 'id'
+    def get_queryset(self):
+        lesson_id = self.kwargs['i']
+        return Lesson.objects.filter(pk=lesson_id)
+

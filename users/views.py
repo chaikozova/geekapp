@@ -1,8 +1,9 @@
 from django.http import Http404
 
-
+from .mentor_comment import MentorComment
 from .serializers import UserRegistrationSerializer, LoginSerializer, \
-    UserListSerializer, UserRetrieveUpdateDeleteSerializer, RequestSerializer
+    UserListSerializer, UserRetrieveUpdateDeleteSerializer, RequestSerializer, ChangePasswordSerializer, \
+    MentorCommentSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, generics, mixins
 from rest_framework.authtoken.models import Token
@@ -52,6 +53,15 @@ class UserRegistrationView(APIView):
         return Response({"successful": False, **serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class ChangePasswordView(generics.UpdateAPIView):
+    """
+    View for password reset
+    """
+    queryset = User.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = ChangePasswordSerializer
+
+
 class UserListView(APIView):
 
     def get(self, request):
@@ -90,3 +100,12 @@ class RequestAPIView(generics.GenericAPIView,
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+
+
+class MentorCommentsView(generics.ListCreateAPIView):
+    """
+    Mentor comments view which is available for many others users for comment.
+    """
+    serializer_class = MentorCommentSerializer
+    queryset = MentorComment.objects.all()
+    lookup_field = 'id'
