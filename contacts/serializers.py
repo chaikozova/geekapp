@@ -1,7 +1,5 @@
 from rest_framework import serializers
 
-from contacts.models import Contact, QuestionAndAnswer
-
 
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,8 +7,11 @@ class ContactSerializer(serializers.ModelSerializer):
         fields = ('address',
                   'subaddress',
                   'city',
-                  'phone_number',
-                  'url')
+                   'phone_number_o',
+                  'phone_number_beeline',
+                  'phone_number_megacom',
+                  )
+       
 
 
 class QandASerializer(serializers.ModelSerializer):
@@ -21,4 +22,5 @@ class QandASerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return QuestionAndAnswer.objects.create(**validated_data)
+
 
