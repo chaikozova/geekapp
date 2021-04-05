@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from contacts.models import QuestionAndAnswer, Contact
+
 
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,7 +13,6 @@ class ContactSerializer(serializers.ModelSerializer):
                   'phone_number_beeline',
                   'phone_number_megacom',
                   )
-       
 
 
 class QandASerializer(serializers.ModelSerializer):
