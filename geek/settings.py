@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'events',
     'courses',
     'contacts',
+    'chat',
+    'channels',
+
 ]
 
 MIDDLEWARE = [
@@ -80,6 +83,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'geek.wsgi.application'
+ASGI_APPLICATION = 'geek.routing.application'
+
 
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
@@ -158,6 +163,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 3,
+    'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
+    'DATETIME_FORMAT': "%d.%m.%Y %H:%M:%S",
+
 }
 
 
