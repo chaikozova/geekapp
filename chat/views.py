@@ -47,9 +47,10 @@ class ChatsView(APIView):
 
     def post(self, request, id):
         room = Room.objects.get(id=id)
-        #message = request.data.get('text')
-        chat = Chat.objects.create_or_update(user=request.user,
-                                             room=room)
+        message = request.data.get('text')
+        chat = Chat.objects.create(user=request.user,
+                                   room=room,
+                                   text=message)
         chat.save()
         return Response(data=self.serializer_class(chat).data,
                         status=status.HTTP_201_CREATED)
