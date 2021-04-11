@@ -45,14 +45,11 @@ class LessonAPIView(generics.ListCreateAPIView):
         return Lesson.objects.filter(level_id=level)
 
 
-
-
-
 class LessonDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LessonDetailSerializer
 
-
     def get_queryset(self):
+        level = self.kwargs['pk']
         lesson_id = self.kwargs['i']
-        return Lesson.objects.filter(pk=lesson_id)
+        return Lesson.objects.filter(pk=lesson_id, level_id=level)
 
