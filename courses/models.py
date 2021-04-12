@@ -47,6 +47,19 @@ class Level(models.Model):
     #     return lessons.count()
 
 
+class GroupLevel(models.Model):
+    name = models.CharField(max_length=25, null=False, blank=False)
+    month = models.ForeignKey(Level, on_delete=models.CASCADE,
+                              null=False, blank=True,
+                              related_name='group_level')
+    students = models.ForeignKey(User, null=True, blank=True,
+                                 on_delete=models.SET_NULL,
+                                 related_name='group_students')
+
+    def __str__(self):
+        return self.name
+
+
 class Lesson(models.Model):
     class Meta:
         verbose_name = 'Урок'
