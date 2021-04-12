@@ -2,6 +2,15 @@ from django.db import models
 
 
 
+class QuestionAndAnswer(models.Model):
+    class Meta:
+        verbose_name = 'Вопрос-Ответ'
+        verbose_name_plural = 'Вопросы-Ответы'
+
+    question_text = models.CharField(max_length=250, null=True, blank=True)
+    answer_text = models.TextField(null=True, blank=True)
+
+
 class ToJoinTheCourse(models.Model):
     class Meta:
         verbose_name = 'Запись на курс'

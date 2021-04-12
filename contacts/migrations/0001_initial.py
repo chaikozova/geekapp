@@ -1,3 +1,4 @@
+
 from django.db import migrations, models
 
 
@@ -23,6 +24,18 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Контакт',
                 'verbose_name_plural': 'Контакты',
+            },
+        ),
+        migrations.CreateModel(
+            name='QuestionAndAnswer',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('question_text', models.CharField(blank=True, max_length=250, null=True)),
+                ('answer_text', models.TextField(blank=True, null=True)),
+            ],
+            options={
+                'verbose_name': 'Вопрос-Ответ',
+                'verbose_name_plural': 'Вопросы-Ответы',
             },
         ),
         migrations.CreateModel(
