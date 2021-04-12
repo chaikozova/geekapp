@@ -11,8 +11,6 @@ class Course(models.Model):
     title = models.CharField(max_length=240)
     description = models.TextField(null=True, blank=True)
     color = models.CharField(max_length=100, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL,
-                             null=True, blank=True, related_name='courses')
 
     def __str__(self):
         return self.title
@@ -45,6 +43,19 @@ class Level(models.Model):
     # def lessons_count(self):
     #     lessons = Lesson.objects.filter(level=self.pk)
     #     return lessons.count()
+
+
+class GroupLevel(models.Model):
+    name = models.CharField(max_length=25, null=False, blank=False)
+    month = models.ForeignKey(Level, on_delete=models.CASCADE,
+                              null=False, blank=True,
+                              related_name='group_level')
+    students = models.ForeignKey(User, null=True, blank=True,
+                                 on_delete=models.SET_NULL,
+                                 related_name='group_students')
+
+    def __str__(self):
+        return self.name
 
 
 class Lesson(models.Model):
