@@ -12,15 +12,14 @@ class CreateRequestMentorHelpAPIView(APIView):
     serializer_class = CreateRequestSerializer
 
     def post(self, request, format=None):
-        queryset = Request.objects.all()
-        serializer = self.serializer_class(queryset, data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = request.user
             group = GroupLevel.objects.get(students=user)
             request_month = group.month
             request_teacher = request_month.teacher.first_name + ' ' + request_month.teacher.last_name
             try:
-                Request.objects.create(
+                req = Request.objects.create(
                     student=user,
                     month=request_month.level_number,
                     category=serializer.data['category'],
@@ -31,14 +30,9 @@ class CreateRequestMentorHelpAPIView(APIView):
                     problem_description=serializer.data['problem_description'],
                     file=serializer.data['file']
                 )
-                notification_mentors = User.objects.filter(user_type='MENTOR',
-                                                           group_students__level_number__gte=request_month.level_number,
-                                                           group_students__level_number__level__title=request_month.course.title).values_list('pk', flat=True)
-
-
+                req.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except Exception as e:
-                return Response({'code': status.HTTP_400_BAD_REQUEST, 'msg': str(e)})
-
+                return Response({'code': status.HTTP_226_IM_USED, 'msg': str(e)})
         return Response({'code': status.HTTP_400_BAD_REQUEST, 'msg': serializer.errors.msg})
 

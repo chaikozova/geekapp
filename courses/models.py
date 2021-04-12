@@ -11,8 +11,6 @@ class Course(models.Model):
     title = models.CharField(max_length=240)
     description = models.TextField(null=True, blank=True)
     color = models.CharField(max_length=100, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL,
-                             null=True, blank=True, related_name='courses')
 
     def __str__(self):
         return self.title
