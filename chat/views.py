@@ -12,17 +12,17 @@ class RoomsView(APIView):
     """Chat rooms APIView with get and post methods"""
     # permission_classes = [permissions.IsAuthenticated, ]
     permission_classes = [permissions.AllowAny, ]
+    serializer_class = RoomSerializer
 
     def get(self, request):
         rooms = Room.objects.filter(Q(creator=request.user) |
                                     Q(invited=request.user))
-        serializers = RoomSerializer(rooms, many=True)
-        return Response(data=serializers.data)
+        return Response(data=self.serializer_class(rooms, many=True).data)
 
     def post(self, request):
         room = Room.objects.create(creator=request.user)
         room.save()
-        return Response(data=self.RoomSerializer(room).data,
+        return Response(data=self.serializer_class(room).data,
                         status=status.HTTP_201_CREATED)
 
 

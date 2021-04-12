@@ -88,11 +88,11 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
 
 class UserListSerializer(serializers.ModelSerializer):
-    courses = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    #courses = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'courses',
+        fields = ('id', 'email', 'first_name', 'last_name',
                   'phone_number', 'telegram', 'instagram', 'github',
                   'is_staff')
         read_only_fields = ('created',)
