@@ -1,5 +1,3 @@
-
-
 from django.db import migrations, models
 
 
@@ -25,6 +23,18 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Контакт',
                 'verbose_name_plural': 'Контакты',
+            },
+        ),
+        migrations.CreateModel(
+            name='ToJoinTheCourse',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('course', models.CharField(choices=[('android', 'Android-разработка'), ('backend', 'Backend-разработка'), ('front', 'Frontend-разработка'), ('design', 'UI/UX design'), ('ios', 'iOS-разработка')], max_length=50, verbose_name='Курс')),
+                ('name_and_surname', models.CharField(max_length=50, verbose_name='Имя и фамилия')),
+                ('telephone_number', models.CharField(max_length=50, verbose_name='Номер телефона')),
+            ],
+            options={
+                'verbose_name': 'Запись на курс',
             },
         ),
     ]
