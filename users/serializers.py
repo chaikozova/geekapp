@@ -1,5 +1,8 @@
 from django.contrib.auth import authenticate
-from .models import User, Request
+from django.contrib.auth.password_validation import validate_password
+
+from .mentor_comment import MentorComment
+from .models import User
 from rest_framework import serializers
 
 
@@ -57,6 +60,33 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
+    old_password = serializers.CharField(write_only=True, required=True)
+
+    class Meta:
+        model = User
+        fields = ('old_password', 'password', 'password2',)
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({'password': "Password fields didn't match."})
+        return attrs
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError({'password': 'Old password is not correct.'})
+        return value
+
+    def update(self, instance, validated_data):
+        instance.set_password(validated_data['password'])
+        instance.save()
+
+        return instance
+
+
 class UserListSerializer(serializers.ModelSerializer):
     courses = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
@@ -91,7 +121,7 @@ class UserRetrieveUpdateDeleteSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'first_name', 'last_name', 'courses',
                   'phone_number', 'telegram', 'instagram', 'github',
                   'image')
-        read_only_fields = ('created',)
+        read_only_fields = ('created', 'notification_recipients')
 
     def update(self, instance, validated_data):
         instance.first_name = validated_data.get('first_name')
@@ -107,35 +137,20 @@ class UserRetrieveUpdateDeleteSerializer(serializers.ModelSerializer):
         return instance
 
 
-class RequestSerializer(serializers.ModelSerializer):
-    month = serializers.ChoiceField(choices=Request.MONTH_TYPE)
-    category = serializers.ChoiceField(choices=Request.CATEGORY_TYPE)
-    course_program = serializers.ChoiceField(choices=Request.PROGRAM_TYPE)
-    teacher = serializers.ChoiceField(choices=Request.PROGRAM_TYPE)
-    student = serializers.ReadOnlyField(source='user.email')
+
+class MentorCommentSerializer(serializers.ModelSerializer):
+    mentor_comment = UserShortInfoSerializer(read_only=True)
+    users_comment = UserShortInfoSerializer(read_only=True, many=True)
+    created = serializers.DateTimeField(format="%d.%m.%Y - %H:%M:%S")
 
     class Meta:
-        model = Request
-        fields = ('month',
-                  'category',
-                  'group_number',
-                  'course_program',
-                  'teacher',
-                  'problem_title',
-                  'problem_description',
-                  'file',
-                  'student')
+        model = MentorComment
+        fields = ('id', 'comment', 'created', 'rate', 'users', 'users_comment', 'mentor', 'mentor_comment')
 
     def create(self, validated_data):
-        request = Request.objects.create(
-            student=validated_data.get('student', None),
-            month=validated_data.get('month', None),
-            category=validated_data.get('category', None),
-            group_number=validated_data.get('group_number', None),
-            course_program=validated_data.get('course_program', None),
-            teacher=validated_data.get('teacher', None),
-            problem_title=validated_data.get('problem_title', None),
-            problem_description=validated_data.get('problem_description', None),
-            file=validated_data.get('file', None),
-        )
-        return request
+        return MentorComment.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.comment = validated_data.get('comment')
+        instance.created = validated_data.get('created')
+        return instance

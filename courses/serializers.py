@@ -21,10 +21,10 @@ class LessonDetailSerializer(serializers.ModelSerializer):
 
 
 class LessonSerializer(serializers.ModelSerializer):
-
+    
     class Meta:
         model = Lesson
-        fields = ('title', )
+        fields = ('id', 'title',)
 
 
 class LevelDetailSerializer(serializers.ModelSerializer):
@@ -63,14 +63,12 @@ class LevelDetailSerializer(serializers.ModelSerializer):
 
 
 class LevelSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Level
-        fields = ('title', )
+        fields = ('id', 'title',)
 
 
 class CourseSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Course
         fields = ('id', 'logo', 'color', 'title')
