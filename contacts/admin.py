@@ -1,5 +1,6 @@
 from django.contrib import admin
-from contacts.models import Contact, ToJoinTheCourse
 
-admin.site.register(Contact)
+from contacts.models import ToJoinTheCourse
+
+
 admin.site.register(ToJoinTheCourse)

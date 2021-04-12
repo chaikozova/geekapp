@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import User, Request
-# Register your models here.
-
+from .mentor_comment import MentorComment
+from .models import User
 
 admin.site.register(User)
-admin.site.register(Request)
+admin.site.register(MentorComment)
