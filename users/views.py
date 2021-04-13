@@ -1,9 +1,10 @@
+import self as self
 from django.http import Http404
 
 from .mentor_comment import MentorComment
 from .serializers import UserRegistrationSerializer, LoginSerializer, \
     UserListSerializer, UserRetrieveUpdateDeleteSerializer, ChangePasswordSerializer, \
-    MentorCommentSerializer
+    MentorCommentSerializer, EmailUpdateSerializer, ImageUpdateSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, generics, mixins
 from rest_framework.authtoken.models import Token
@@ -90,7 +91,7 @@ class UserRetrieveUpdateDeleteAPIView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response({'code': status.HTTP_400_BAD_REQUEST, 'msg': serializer.errors.msg})
+        return Response({'code': status.HTTP_400_BAD_REQUEST, 'msg': serializer.errors})
 
 
 class MentorCommentsView(generics.ListCreateAPIView):
@@ -100,3 +101,19 @@ class MentorCommentsView(generics.ListCreateAPIView):
     serializer_class = MentorCommentSerializer
     queryset = MentorComment.objects.all()
     lookup_field = 'id'
+
+
+class ImageUpdateView(generics.RetrieveUpdateAPIView):
+    serializer_class = ImageUpdateSerializer
+
+    def get_queryset(self):
+        image_id = self.kwargs['pk']
+        return User.objects.get(pk=image_id)
+
+
+class EmailUpdateView(generics.UpdateAPIView):
+    serializer_class = EmailUpdateSerializer
+
+    def get_queryset(self):
+        email_id = self.kwargs['pk']
+        return User.objects.get(pk=email_id)

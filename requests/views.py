@@ -1,7 +1,6 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from requests.models import Request
 from requests.serializers import CreateRequestSerializer
 from courses.models import GroupLevel
@@ -34,5 +33,5 @@ class CreateRequestMentorHelpAPIView(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({'code': status.HTTP_226_IM_USED, 'msg': str(e)})
-        return Response({'code': status.HTTP_400_BAD_REQUEST, 'msg': serializer.errors.msg})
+        return Response({'code': status.HTTP_400_BAD_REQUEST, 'msg': serializer.errors})
 

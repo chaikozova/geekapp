@@ -88,7 +88,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
 
 class UserListSerializer(serializers.ModelSerializer):
-    #courses = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    # courses = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -102,6 +102,7 @@ class UserShortInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'image')
+
     read_only_fields = ('created',)
 
 
@@ -118,16 +119,13 @@ class UserRetrieveUpdateDeleteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'courses',
-                  'phone_number', 'telegram', 'instagram', 'github',
-                  'image')
+        fields = ('id', 'first_name', 'last_name', 'birthday',
+                  'phone_number', 'telegram', 'instagram', 'github')
         read_only_fields = ('created', 'notification_recipients')
 
     def update(self, instance, validated_data):
         instance.first_name = validated_data.get('first_name')
         instance.last_name = validated_data.get('last_name')
-        instance.image = validated_data.get('image')
-        instance.email = validated_data.get('email')
         instance.birthday = validated_data.get('birthday')
         instance.phone_number = validated_data.get('phone_number')
         instance.github = validated_data.get('github')
@@ -136,6 +134,17 @@ class UserRetrieveUpdateDeleteSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
+class ImageUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('image',)
+
+
+class EmailUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', )
 
 
 class MentorCommentSerializer(serializers.ModelSerializer):

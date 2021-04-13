@@ -9,4 +9,7 @@ urlpatterns = [
     path('api/user/', user_views.UserListView.as_view(), name='user-list'),
     path('api/change_password/<int:pk>/', user_views.ChangePasswordView.as_view(), name='reset_password'),
     path('api/mentor_comment/', user_views.MentorCommentsView.as_view(), name='mentor_comment'),
+    path('api/image-update/<int:pk>/', user_views.ImageUpdateView.as_view(), name='image_update'),
+    path('api/email-update/<int:pk>/', user_views.EmailUpdateView.as_view(), name='email_update'),
+
 ]
