@@ -1,4 +1,3 @@
-import self as self
 from django.http import Http404
 
 from .mentor_comment import MentorComment
