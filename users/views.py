@@ -30,6 +30,7 @@ class LoginView(APIView):
 class LogoutView(APIView):
     """View for log out"""
 
+
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
