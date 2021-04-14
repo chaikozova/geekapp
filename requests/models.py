@@ -22,7 +22,7 @@ class Request(models.Model):
     @property
     def notification_mentors(self):
         not_users = User.objects.filter(user_type='MENTOR')
-        return not_users.filter(group_students__month__level_number__gt=self.month)
+        return not_users.filter(group_students__month__level_number__gt=self.month).values_list('id', flat=True)
 
 
 class Notification(models.Model):
