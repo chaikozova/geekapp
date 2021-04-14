@@ -6,14 +6,14 @@ from chat.models import Room
 from chat.serializers import RoomSerializer
 from requests.models import Request, Notification
 from requests.notification_create import notification_send, notification_from_mentor
-from requests.serializers import CreateRequestSerializer, CreateNotificationSerializer
+from requests.serializers import CreateRequestSerializer, CreateNotificationSerializer, NotificationListSerializer
 from courses.models import GroupLevel
 
 
 class CreateRequestMentorHelpAPIView(APIView):
     serializer_class = CreateRequestSerializer
 
-    def post(self, request, format=None):
+    def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = request.user
@@ -52,6 +52,12 @@ class MentorResponseToRequestAPIView(APIView):
         return Response(data=serializer.data,
                         status=status.HTTP_201_CREATED)
 
+    def delete(self, request, id):
+        notification = Notification.objects.get(id=id)
+        notification.delete()
+        serializer = self.serializer_class(notification)
+        return Response({'msg': 'Notification has been deleted.'})
+
 
 class CreateRoomForMentorAndStudentAPIView(APIView):
 
@@ -72,10 +78,30 @@ class CreateRoomForMentorAndStudentAPIView(APIView):
         return Response({'code': status.HTTP_400_BAD_REQUEST})
 
 
-class NotificationsAPIView(APIView):
-    serializer_class = CreateNotificationSerializer
+class StudentRejectNotificationAPIView(APIView):
+    serializer_class = NotificationListSerializer
+
+    def delete(self, request, id):
+        notification = Notification.objects.get(id=id)
+        notification.is_match = False
+        notification.delete()
+        serializers = self.serializer_class(notification)
+        return Response({'msg': 'Notification has been deleted.'})
+
+
+class NotificationsListAPIView(APIView):
+    serializer_class = NotificationListSerializer
 
     def get(self, request):
-        notification = Notification.objects.filter(recipients=request.user)
-        serializers = self.serializer_class(notification, many=True)
+        notifications = Notification.objects.filter(recipients=request.user)
+        serializers = self.serializer_class(notifications, many=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
+
+
+class MyNotificationsListAPIView(APIView):
+    serializer_class = NotificationListSerializer
+
+    def get(self, request):
+        notifications = Notification.objects.filter(sener=request.user)
+        serializers = self.serializer_class(notifications, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)

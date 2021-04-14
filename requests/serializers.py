@@ -26,3 +26,18 @@ class CreateNotificationSerializer(serializers.ModelSerializer):
             'recipients',
             'sender',
         )
+
+
+class NotificationListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Notification
+        fields = (
+            'id',
+            'message',
+            'type',
+            'recipients',
+            'sender',
+            'recieved_date',
+            'created',
+        )
