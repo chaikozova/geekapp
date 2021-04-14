@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
@@ -35,7 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name='Date of join')
     is_staff = models.BooleanField(default=False, verbose_name='Is staff')
     is_active = models.BooleanField(default=True, verbose_name='Is active')
-    phone_number = models.CharField(max_length=200, blank=True, null=True, verbose_name='Phone number')
+    material_url = ArrayField(models.CharField(max_length=250, null=True, blank=True), size=5, null=True, blank=True)
     birthday = models.DateField(max_length=20, blank=True, null=True, verbose_name='Birthday')
 
     USERNAME_FIELD = 'email'

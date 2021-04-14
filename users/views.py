@@ -3,7 +3,8 @@ from django.http import Http404
 from .mentor_comment import MentorComment
 from .serializers import UserRegistrationSerializer, LoginSerializer, \
     UserListSerializer, UserRetrieveUpdateDeleteSerializer, ChangePasswordSerializer, \
-    MentorCommentSerializer, EmailUpdateSerializer, ImageUpdateSerializer
+    MentorCommentSerializer, EmailUpdateSerializer, ImageUpdateSerializer, UserMainInfoUpdateSerializer, \
+    UserSocialMediaInfoUpdateSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, generics, mixins
 from rest_framework.authtoken.models import Token
@@ -113,6 +114,22 @@ class ImageUpdateView(generics.RetrieveUpdateAPIView):
 
 class EmailUpdateView(generics.UpdateAPIView):
     serializer_class = EmailUpdateSerializer
+
+    def get_queryset(self):
+        email_id = self.kwargs['pk']
+        return User.objects.get(pk=email_id)
+
+
+class UserMainInfoUpdateView(generics.UpdateAPIView):
+    serializer_class = UserMainInfoUpdateSerializer
+
+    def get_queryset(self):
+        email_id = self.kwargs['pk']
+        return User.objects.get(pk=email_id)
+
+
+class UserSocialInfoUpdateView(generics.UpdateAPIView):
+    serializer_class = UserSocialMediaInfoUpdateSerializer
 
     def get_queryset(self):
         email_id = self.kwargs['pk']

@@ -120,17 +120,13 @@ class UserRetrieveUpdateDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'birthday',
-                  'phone_number', 'telegram', 'instagram', 'github')
-        read_only_fields = ('created', 'notification_recipients')
+                  'courses', 'created', 'user_type')
+        read_only_fields = ('created', 'user_type')
 
     def update(self, instance, validated_data):
         instance.first_name = validated_data.get('first_name')
         instance.last_name = validated_data.get('last_name')
         instance.birthday = validated_data.get('birthday')
-        instance.phone_number = validated_data.get('phone_number')
-        instance.github = validated_data.get('github')
-        instance.instagram = validated_data.get('instagram')
-        instance.telegram = validated_data.get('telegram')
         instance.save()
         return instance
 
@@ -163,3 +159,15 @@ class MentorCommentSerializer(serializers.ModelSerializer):
         instance.comment = validated_data.get('comment')
         instance.created = validated_data.get('created')
         return instance
+
+
+class UserMainInfoUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'birthday', 'phone_number')
+
+
+class UserSocialMediaInfoUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('github', 'telegram', 'instagram')
