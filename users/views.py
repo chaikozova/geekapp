@@ -112,7 +112,7 @@ class ImageUpdateView(generics.RetrieveUpdateAPIView):
         return User.objects.get(pk=image_id)
 
 
-class EmailUpdateView(generics.UpdateAPIView):
+class EmailUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = EmailUpdateSerializer
 
     def get_queryset(self):
@@ -120,7 +120,7 @@ class EmailUpdateView(generics.UpdateAPIView):
         return User.objects.get(pk=email_id)
 
 
-class UserMainInfoUpdateView(generics.UpdateAPIView):
+class UserMainInfoUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = UserMainInfoUpdateSerializer
 
     def get_queryset(self):
@@ -128,7 +128,7 @@ class UserMainInfoUpdateView(generics.UpdateAPIView):
         return User.objects.get(pk=email_id)
 
 
-class UserSocialInfoUpdateView(generics.UpdateAPIView):
+class UserSocialInfoUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSocialMediaInfoUpdateSerializer
 
     def get_queryset(self):
