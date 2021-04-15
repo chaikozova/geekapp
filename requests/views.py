@@ -102,6 +102,6 @@ class MyNotificationsListAPIView(APIView):
     serializer_class = NotificationListSerializer
 
     def get(self, request):
-        notifications = Notification.objects.filter(sener=request.user)
+        notifications = Notification.objects.filter(sender=request.user)
         serializers = self.serializer_class(notifications, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
