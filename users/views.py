@@ -1,17 +1,19 @@
 from django.http import Http404
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import UpdateModelMixin
 
 from .mentor_comment import MentorComment
 from .serializers import UserRegistrationSerializer, LoginSerializer, \
     UserListSerializer, UserRetrieveUpdateDeleteSerializer, ChangePasswordSerializer, \
     MentorCommentSerializer, EmailUpdateSerializer, ImageUpdateSerializer, UserMainInfoUpdateSerializer, \
-    UserSocialMediaInfoUpdateSerializer
+    UserSocialMediaInfoUpdateSerializer, IsMentorSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, generics, mixins
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import User
+from .models import User, IsMentor
 
 
 class LoginView(APIView):
@@ -95,6 +97,7 @@ class UserRetrieveUpdateDeleteAPIView(APIView):
         return Response({'code': status.HTTP_400_BAD_REQUEST, 'msg': serializer.errors})
 
 
+
 class MentorCommentsView(generics.ListCreateAPIView):
     """
     Mentor comments view which is available for many others users for comment.
@@ -104,15 +107,18 @@ class MentorCommentsView(generics.ListCreateAPIView):
     lookup_field = 'id'
 
 
-class ImageUpdateView(generics.RetrieveUpdateAPIView):
+class ImageUpdateView(GenericAPIView, UpdateModelMixin):
     serializer_class = ImageUpdateSerializer
 
     def get_queryset(self):
         image_id = self.kwargs['pk']
         return User.objects.get(pk=image_id)
 
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
-class EmailUpdateView(generics.RetrieveUpdateAPIView):
+
+class EmailUpdateView(generics.UpdateAPIView):
     serializer_class = EmailUpdateSerializer
 
     def get_queryset(self):
@@ -120,7 +126,7 @@ class EmailUpdateView(generics.RetrieveUpdateAPIView):
         return User.objects.get(pk=email_id)
 
 
-class UserMainInfoUpdateView(generics.RetrieveUpdateAPIView):
+class UserMainInfoUpdateView(generics.UpdateAPIView):
     serializer_class = UserMainInfoUpdateSerializer
 
     def get_queryset(self):
@@ -134,3 +140,9 @@ class UserSocialInfoUpdateView(generics.RetrieveUpdateAPIView):
     def get_queryset(self):
         email_id = self.kwargs['pk']
         return User.objects.get(pk=email_id)
+
+
+class IsMentorView(generics.CreateAPIView):
+    serializer_class = IsMentorSerializer
+    queryset = IsMentor.objects.all()
+
