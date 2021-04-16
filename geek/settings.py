@@ -162,7 +162,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 3,
+    'PAGE_SIZE': 10,
     # 'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
     'DATETIME_FORMAT': "%d.%m.%Y %H:%M:%S",
 
