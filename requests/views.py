@@ -6,7 +6,8 @@ from chat.models import Room
 from chat.serializers import RoomSerializer
 from requests.models import Request, Notification
 from requests.notification_create import notification_send, notification_from_mentor
-from requests.serializers import CreateRequestSerializer, CreateNotificationSerializer, NotificationListSerializer
+from requests.serializers import CreateRequestSerializer, CreateNotificationSerializer, NotificationListSerializer, \
+    RequestSerializer
 from courses.models import GroupLevel
 
 
@@ -44,7 +45,7 @@ class MentorResponseToRequestAPIView(APIView):
     serializer_class = CreateNotificationSerializer
 
     def put(self, request, id):
-        notification = Notification.objects.get(id=id)
+        notification = Notification.objects.get(id=id, recipients=request.user)
         notification.is_read_by_mentor = True
         notification.save()
         notification_from_mentor(notification)
@@ -62,7 +63,7 @@ class MentorResponseToRequestAPIView(APIView):
 class CreateRoomForMentorAndStudentAPIView(APIView):
 
     def put(self, request, id):
-        notification = Notification.objects.get(id=id)
+        notification = Notification.objects.get(id=id, recipients=request.user)
         notification.is_match = True
         notification.save()
 
@@ -98,10 +99,10 @@ class NotificationsListAPIView(APIView):
         return Response(serializers.data, status=status.HTTP_200_OK)
 
 
-class MyNotificationsListAPIView(APIView):
-    serializer_class = NotificationListSerializer
+class MyRequestListAPIView(APIView):
+    serializer_class = RequestSerializer
 
     def get(self, request):
-        notifications = Notification.objects.filter(sender=request.user)
-        serializers = self.serializer_class(notifications, many=True)
+        request = Request.objects.filter(student=request.user)
+        serializers = self.serializer_class(request, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)

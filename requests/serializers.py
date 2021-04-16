@@ -15,6 +15,23 @@ class CreateRequestSerializer(serializers.ModelSerializer):
         )
 
 
+class RequestSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Request
+        fields = (
+            'id',
+            'student',
+            'month',
+            'group_number',
+            'category',
+            'course_program',
+            'teacher',
+            'problem_title',
+            'problem_description',
+            'file',
+        )
+
 class CreateNotificationSerializer(serializers.ModelSerializer):
 
     class Meta:
