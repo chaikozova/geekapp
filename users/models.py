@@ -31,13 +31,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     telegram = models.CharField(max_length=200, blank=True, null=True, verbose_name='Telegram')
     github = models.URLField(max_length=150, blank=True, null=True, verbose_name='Github')
     instagram = models.CharField(max_length=150, blank=True, null=True, verbose_name='Instagram')
-    image = models.ImageField(upload_to='media', max_length=254, blank=True, null=True)
+    image = models.ImageField(upload_to='media', blank=True, null=True)
     coins = models.IntegerField(blank=True, null=True, verbose_name='Geek coins')
     date_joined = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name='Date of join')
     is_staff = models.BooleanField(default=False, verbose_name='Is staff')
     is_active = models.BooleanField(default=True, verbose_name='Is active')
-    material_url = ArrayField(models.CharField(max_length=250, null=True, blank=True), size=5, null=True, blank=True)
+    phone_number = ArrayField(models.CharField(max_length=100, null=True, blank=True), size=5, null=True, blank=True)
     birthday = models.DateField(max_length=20, blank=True, null=True, verbose_name='Birthday')
+
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -56,5 +57,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if issubclass(sender, User) and created:
         Token.objects.create(user=instance)
+
+
+class IsMentor(models.Model):
+    class Meta:
+        verbose_name = 'Стать ментором'
+        verbose_name_plural = 'Стать ментором'
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='is_mentor', null=True)
+    is_mentor = models.BooleanField(default=None)
+    blank_to_be_mentor = models.TextField()
+
+
+
 
 

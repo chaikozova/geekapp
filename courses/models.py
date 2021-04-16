@@ -46,6 +46,11 @@ class Level(models.Model):
 
 
 class GroupLevel(models.Model):
+
+    class Meta:
+        verbose_name = 'Уровень группы'
+        verbose_name_plural = 'Уровень группы'
+
     name = models.CharField(max_length=25, null=False, blank=False)
     month = models.ForeignKey(Level, on_delete=models.CASCADE,
                               null=False, blank=True,

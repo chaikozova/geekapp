@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 
 from .mentor_comment import MentorComment
-from .models import User
+from .models import User, IsMentor
 from rest_framework import serializers
 
 
@@ -95,15 +95,12 @@ class UserListSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'first_name', 'last_name',
                   'phone_number', 'telegram', 'instagram', 'github',
                   'is_staff')
-        read_only_fields = ('created',)
 
 
 class UserShortInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'image')
-
-    read_only_fields = ('created',)
 
 
 class TeacherSerializer(serializers.Serializer):
@@ -115,17 +112,21 @@ class TeacherSerializer(serializers.Serializer):
 
 
 class UserRetrieveUpdateDeleteSerializer(serializers.ModelSerializer):
-    courses = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'birthday',
-                  'courses', 'created', 'user_type')
-        read_only_fields = ('created', 'user_type')
+        fields = ('first_name', 'last_name', 'email', 'telegram',
+                  'github', 'instagram', 'image', 'phone_number', 'birthday')
+        read_only_fields = ('user_type',)
 
     def update(self, instance, validated_data):
         instance.first_name = validated_data.get('first_name')
         instance.last_name = validated_data.get('last_name')
+        instance.email = validated_data.get('email')
+        instance.telegram = validated_data.get('telegram')
+        instance.github = validated_data.get('github')
+        instance.instagram = validated_data.get('instagram')
+        instance.image = validated_data.get('image')
+        instance.phone_number = validated_data.get('phone_number')
         instance.birthday = validated_data.get('birthday')
         instance.save()
         return instance
@@ -140,7 +141,7 @@ class ImageUpdateSerializer(serializers.ModelSerializer):
 class EmailUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', )
+        fields = ('email',)
 
 
 class MentorCommentSerializer(serializers.ModelSerializer):
@@ -171,3 +172,11 @@ class UserSocialMediaInfoUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('github', 'telegram', 'instagram')
+
+
+class IsMentorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IsMentor
+        fields = ('user',
+                  'is_mentor',
+                  'blank_to_be_mentor')
