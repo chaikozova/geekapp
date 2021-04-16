@@ -13,5 +13,6 @@ urlpatterns = [
     path('api/email-update/user/<int:pk>/', user_views.EmailUpdateView.as_view(), name='email_update'),
     path('api/main-info/user/<int:pk>/', user_views.UserMainInfoUpdateView.as_view(), name='email_update'),
     path('api/social-media-info/user/<int:pk>/', user_views.UserSocialInfoUpdateView.as_view(), name='email_update'),
+    path('api/is-mentor/', user_views.IsMentorView.as_view(), name='email_update'),
 
 ]

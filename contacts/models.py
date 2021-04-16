@@ -1,5 +1,7 @@
 from django.db import models
 
+from courses.models import Course
+
 
 class Contact(models.Model):
     class Meta:
@@ -25,15 +27,9 @@ class QuestionAndAnswer(models.Model):
 class ToJoinTheCourse(models.Model):
     class Meta:
         verbose_name = 'Запись на курс'
+        verbose_name_plural = 'Запись на курс'
 
-    COURSES = (
-        ('android', 'Android-разработка'),
-        ('backend', 'Backend-разработка'),
-        ('front', 'Frontend-разработка'),
-        ('design', 'UI/UX design'),
-        ('ios', 'iOS-разработка'),
-    )
-
-    course = models.CharField(choices=COURSES, verbose_name='Курс', max_length=50)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE,
+                               related_name='course_choice', verbose_name='Курс')
     name_and_surname = models.CharField(max_length=50, verbose_name='Имя и фамилия')
     telephone_number = models.CharField(max_length=50, verbose_name='Номер телефона')
