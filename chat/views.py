@@ -107,9 +107,9 @@ class DialogView(APIView):
     # permissions_classes = [permissions.AllowAny, ]
     allowed_methods = ['get', 'post']
 
-    def get(self, request, pk, id):
+    def get(self, request, pk):
         room = Room.objects.get(pk=pk)
-        chat = Chat.objects.filter(room=room, id=id)
+        chat = Chat.objects.filter(room=room)
         serializer = ChatSerializer(chat, many=True)
         return Response(data=serializer.data)
 

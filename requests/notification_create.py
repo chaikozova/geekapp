@@ -11,6 +11,7 @@ def notification_send(req, mentors):
     message = req.problem_title
     type = req.category
     for mentor in mentors:
+        print(mentor)
         notification = Notification.objects.create(
                     recipients=User.objects.get(id=mentor),
                     message=message,

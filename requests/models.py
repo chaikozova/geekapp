@@ -3,7 +3,6 @@ from users.models import User
 
 
 class Request(models.Model):
-
     class Meta:
         verbose_name = 'Запрос'
         verbose_name_plural = 'Запросы'
@@ -21,13 +20,14 @@ class Request(models.Model):
 
     @property
     def notification_mentors(self):
-        not_users = User.objects.filter(user_type='MENTOR')
-        not_users = not_users.filter(group_students__month__level_number__gt=self.month)
+        not_users = User.objects.filter(user_type='MENTOR',
+                                        group_students__month__course=self.month.course.id,
+                                        group_students__month__level_number__gt=self.month.level_number)
+
         return not_users.values_list('id', flat=True)
 
 
 class Notification(models.Model):
-
     class Meta:
         verbose_name = 'Уведомление'
         verbose_name_plural = 'Уведомления'
@@ -42,5 +42,3 @@ class Notification(models.Model):
                                    null=True)
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_sender', null=True)
     is_read_by_mentor = models.BooleanField(default=None, null=True)
-
-

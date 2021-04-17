@@ -39,11 +39,6 @@ class Level(models.Model):
     def __str__(self):
         return self.title
 
-    # @property
-    # def lessons_count(self):
-    #     lessons = Lesson.objects.filter(level=self.pk)
-    #     return lessons.count()
-
 
 class GroupLevel(models.Model):
 

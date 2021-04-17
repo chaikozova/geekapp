@@ -3,12 +3,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from chat.models import Room
-from chat.serializers import RoomSerializer
+from chat.serializers import RoomListSerializer, RoomSerializer
 from requests.models import Request, Notification
 from requests.notification_create import notification_send, notification_from_mentor
-from requests.serializers import CreateRequestSerializer, CreateNotificationSerializer, NotificationListSerializer, \
-    RequestSerializer
+from requests.serializers import CreateRequestSerializer, CreateNotificationSerializer, NotificationListSerializer
 from courses.models import GroupLevel
+from users.models import User
 
 
 class CreateRequestMentorHelpAPIView(APIView):
@@ -20,6 +20,7 @@ class CreateRequestMentorHelpAPIView(APIView):
             user = request.user
             group = GroupLevel.objects.get(students=user)
             request_month = group.month
+            course = request_month.course
             request_teacher = request_month.teacher.first_name + ' ' + request_month.teacher.last_name
             try:
                 req = Request.objects.create(
@@ -34,7 +35,12 @@ class CreateRequestMentorHelpAPIView(APIView):
                     file=serializer.data['file']
                 )
                 req.save()
-                notification_send(req, req.notification_mentors)
+                mentors = User.objects.filter(user_type='MENTOR',
+                                              group_students__month__course=course,
+                                              group_students__month__level_number__gt=request_month.level_number)
+                mentors = mentors.values_list('id', flat=True)
+                print(mentors)
+                notification_send(req, mentors)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({'code': status.HTTP_226_IM_USED, 'msg': str(e)})
@@ -68,9 +74,11 @@ class CreateRoomForMentorAndStudentAPIView(APIView):
         notification.save()
 
         if notification.is_match and notification.is_read_by_mentor:
-            room = Room.objects.create(creator=notification.recipients)
+            room = Room.objects.create(creator=notification.recipients,
+                                       name=notification.message)
             room.invited.add(notification.sender)
             room.save()
+            notification.delete()
             return Response(data=RoomSerializer(room).data,
                             status=status.HTTP_201_CREATED)
         elif not notification.is_match:
@@ -99,10 +107,35 @@ class NotificationsListAPIView(APIView):
         return Response(serializers.data, status=status.HTTP_200_OK)
 
 
-class MyRequestListAPIView(APIView):
-    serializer_class = RequestSerializer
+class MyNotificationsAPIView(APIView):
+    serializer_class = RoomListSerializer
 
     def get(self, request):
-        request = Request.objects.filter(student=request.user)
-        serializers = self.serializer_class(request, many=True)
+        chats = Room.objects.filter(invited=request.user)
+        serializers = self.serializer_class(chats, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
+
+
+class MyRequestsAPIView(APIView):
+    serializer_class = RoomListSerializer
+
+    def get(self, request):
+        chats = Room.objects.filter(creator=request.user)
+        serializers = self.serializer_class(chats, many=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
+
+
+class EndTheRoomAPIView(APIView):
+    serializer_class = RoomListSerializer
+
+    def delete(self, request, id):
+        room = Room.objects.get(id=id)
+        student = room.creator
+        mentors = room.invited.all()
+        student.coins -= 1
+        student.save()
+        mentor = mentors[0]
+        mentor.coins += 1
+        mentor.save()
+        room.delete()
+        return Response({'msg': 'The chat has been deleted.'})

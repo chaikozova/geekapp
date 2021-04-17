@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from courses.models import Course, Level, Lesson
+from courses.models import Course, Level, Lesson, GroupLevel
 from users.serializers import TeacherSerializer
 
 
@@ -98,3 +98,10 @@ class CourseDetailSerializer(serializers.ModelSerializer):
             level1.image = level_data.get('image')
             level1.save()
         return instance
+
+
+class GroupNameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = GroupLevel
+        fields = ('id', 'name',)
