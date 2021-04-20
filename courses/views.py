@@ -1,8 +1,10 @@
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from courses.models import Course, Level, Lesson
+from courses.models import Course, Level, Lesson, GroupLevel
 from courses.serializers import CourseSerializer, LevelDetailSerializer, LessonSerializer, CourseDetailSerializer, \
-    LessonDetailSerializer, LevelSerializer
+    LessonDetailSerializer, LevelSerializer, GroupStudentsListSerializers
 
 
 class CourseAPIView(generics.ListCreateAPIView):
@@ -11,7 +13,7 @@ class CourseAPIView(generics.ListCreateAPIView):
     lookup_field = 'id'
 
 
-class CourseDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class CourseDetailAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = CourseDetailSerializer
     queryset = Course.objects.all()
     lookup_field = 'id'
@@ -45,11 +47,23 @@ class LessonAPIView(generics.ListCreateAPIView):
         return Lesson.objects.filter(level_id=level)
 
 
-class LessonDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = LessonDetailSerializer
+class LessonDetailAPIView(APIView):
 
-    def get_queryset(self):
-        level = self.kwargs['pk']
-        lesson_id = self.kwargs['i']
-        return Lesson.objects.filter(pk=lesson_id, level_id=level)
+    def get(self, request, course_id, level_id, lesson_id):
+        serializer_class = LessonDetailSerializer
+        try:
+            course = Course.objects.get(id=course_id)
+            level = Level.objects.get(pk=level_id, course=course)
+            lesson = Lesson.objects.get(id=lesson_id, level=level)
+            serializers = serializer_class(lesson)
+            return Response(data=serializers.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'code': status.HTTP_400_BAD_REQUEST, 'msg': str(e)})
 
+
+class ListOfGroupsSerializer(APIView):
+
+    def get(self, request):
+        serializer_class = GroupStudentsListSerializers
+        groups = GroupLevel.objects.all()
+        return Response(data=serializer_class(groups, many=True).data, status=status.HTTP_200_OK)

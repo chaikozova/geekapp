@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from courses.models import Course, Level, Lesson, GroupLevel
-from users.serializers import TeacherSerializer
+from users.models import User
+from users.serializers import TeacherSerializer, UserShortInfoSerializer, StudentTableSerializer
 
 
 class LessonDetailSerializer(serializers.ModelSerializer):
@@ -9,7 +10,7 @@ class LessonDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ('level', 'id', 'title', 'description', 'video_url', 'material_url')
+        fields = ('level', 'id', 'title', 'description', 'video_url', 'material_url', 'homework',)
 
     def create(self, validated_data):
         return Lesson.objects.create(**validated_data)
@@ -105,3 +106,23 @@ class GroupNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupLevel
         fields = ('id', 'name',)
+
+
+class GroupStudentsListSerializers(serializers.ModelSerializer):
+    student_last_name = serializers.CharField(source='students.last_name')
+    student_first_name = serializers.CharField(source='students.first_name')
+    group_students = StudentTableSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = GroupLevel
+        fields = ('id', 'name', 'group_students', 'student_first_name', 'student_last_name' )
+
+
+class GroupTableListSerializers(serializers.ModelSerializer):
+
+    group_students = StudentTableSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = GroupLevel
+        fields = ('id', 'name', 'group_students', )
+

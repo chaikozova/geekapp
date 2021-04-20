@@ -21,7 +21,7 @@ class Request(models.Model):
     @property
     def notification_mentors(self):
         not_users = User.objects.filter(user_type='MENTOR',
-                                        group_students__month__course=self.month.course.id,
+                                        group_students__month__course=self.month.course.pk,
                                         group_students__month__level_number__gt=self.month.level_number)
 
         return not_users.values_list('id', flat=True)

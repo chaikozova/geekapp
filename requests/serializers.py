@@ -1,3 +1,4 @@
+from users.serializers import UserShortInfoSerializer
 from .models import Request, Notification
 from rest_framework import serializers
 
@@ -17,6 +18,8 @@ class CreateRequestSerializer(serializers.ModelSerializer):
 
 class RequestSerializer(serializers.ModelSerializer):
 
+    student = UserShortInfoSerializer()
+
     class Meta:
         model = Request
         fields = (
@@ -32,7 +35,9 @@ class RequestSerializer(serializers.ModelSerializer):
             'file',
         )
 
+
 class CreateNotificationSerializer(serializers.ModelSerializer):
+
 
     class Meta:
         model = Notification
@@ -46,6 +51,8 @@ class CreateNotificationSerializer(serializers.ModelSerializer):
 
 
 class NotificationListSerializer(serializers.ModelSerializer):
+
+    sender = UserShortInfoSerializer()
 
     class Meta:
         model = Notification
