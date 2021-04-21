@@ -10,6 +10,7 @@ from courses.serializers import GroupStudentsListSerializers, GroupTableListSeri
 from table.models import TableModel
 from table.serializers import TableCreateSerializer, TableShowSerializer
 from users.models import User
+from users.serializers import StudentTableSerializer
 
 
 class TableCreateAPIView(APIView):
@@ -48,7 +49,8 @@ class TableShowAPIView(APIView):
     def get(self, request, group_id):
         try:
             group = GroupLevel.objects.get(id=group_id)
-            students_list = GroupTableListSerializers(group)
-            return Response(data=students_list.data, status=status.HTTP_200_OK)
+            student = User.objects.get(group_students=group)
+            student_table = StudentTableSerializer(student)
+            return Response(data=student_table.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'code': status.HTTP_400_BAD_REQUEST, 'msg': str(e)})

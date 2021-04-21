@@ -104,14 +104,8 @@ class UserShortInfoSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'image')
 
 
-class TableListingField(serializers.RelatedField):
-    def to_representation(self, value):
-        date_of_lesson = value.date_of_lesson.x.strftime("%X")
-        return '%s %s %d (%s)' % (value.lesson.title, value.is_here, value.score, date_of_lesson)
-
-
 class StudentTableSerializer(serializers.ModelSerializer):
-    table_student = TableListingField(read_only=True, many=True)
+    table_student = TableShowSerializer(read_only=True, many=True)
 
     class Meta:
         model = User

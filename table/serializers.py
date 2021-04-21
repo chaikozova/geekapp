@@ -18,4 +18,4 @@ class TableShowSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TableModel
-        fields = ('lesson', 'is_here', 'score', 'date_of_lesson')
+        fields = ('id', 'lesson', 'is_here', 'score', 'date_of_lesson')
