@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'events',
     'courses',
     'contacts',
+    'table',
     'chat',
     'channels',
     'requests.apps.RequestsConfig',

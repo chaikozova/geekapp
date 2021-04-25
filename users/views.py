@@ -33,7 +33,6 @@ class LoginView(APIView):
 class LogoutView(APIView):
     """View for log out"""
 
-
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
@@ -97,8 +96,7 @@ class UserRetrieveUpdateDeleteAPIView(APIView):
         return Response({'code': status.HTTP_400_BAD_REQUEST, 'msg': serializer.errors})
 
 
-
-class MentorCommentsView(generics.ListCreateAPIView):
+class MentorCommentsView(APIView):
     """
     Mentor comments view which is available for many others users for comment.
     """
@@ -145,4 +143,3 @@ class UserSocialInfoUpdateView(generics.RetrieveUpdateAPIView):
 class IsMentorView(generics.CreateAPIView):
     serializer_class = IsMentorSerializer
     queryset = IsMentor.objects.all()
-

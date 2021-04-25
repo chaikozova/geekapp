@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 
+from table.serializers import TableShowSerializer
 from .mentor_comment import MentorComment
 from .models import User, IsMentor
 from rest_framework import serializers
@@ -92,7 +93,7 @@ class UserListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name',
+        fields = ('id', 'email', 'first_name', 'last_name', 'coins',
                   'phone_number', 'telegram', 'instagram', 'github',
                   'is_staff')
 
@@ -101,6 +102,14 @@ class UserShortInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'image')
+
+
+class StudentTableSerializer(serializers.ModelSerializer):
+    table_student = TableShowSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'table_student')
 
 
 class TeacherSerializer(serializers.Serializer):
@@ -145,21 +154,14 @@ class EmailUpdateSerializer(serializers.ModelSerializer):
 
 
 class MentorCommentSerializer(serializers.ModelSerializer):
-    mentor_comment = UserShortInfoSerializer(read_only=True)
-    users_comment = UserShortInfoSerializer(read_only=True, many=True)
+    mentor = UserShortInfoSerializer(read_only=True)
+    user = UserShortInfoSerializer(read_only=True, many=True)
     created = serializers.DateTimeField(format="%d.%m.%Y - %H:%M:%S")
 
     class Meta:
         model = MentorComment
-        fields = ('id', 'comment', 'created', 'rate', 'users', 'users_comment', 'mentor', 'mentor_comment')
-
-    def create(self, validated_data):
-        return MentorComment.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.comment = validated_data.get('comment')
-        instance.created = validated_data.get('created')
-        return instance
+        fields = ('id', 'comment', 'created', 'rate', 'users', 'mentor')
+        read_only_fields = ('created', )
 
 
 class UserMainInfoUpdateSerializer(serializers.ModelSerializer):
