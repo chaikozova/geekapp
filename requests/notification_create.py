@@ -41,6 +41,8 @@ def notification_from_mentor(req):
         )
         notification.save()
         serializer = CreateNotificationSerializer(notification)
+        devices = FCMDevice.objects.get(user=recipients)
+        devices.send_message(title="Notification", body=message)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'code': status.HTTP_226_IM_USED, 'msg': str(e)})
