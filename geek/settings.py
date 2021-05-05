@@ -30,6 +30,9 @@ DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
+FCM_DJANGO_SETTINGS = {
+    "FCM_SERVER_KEY": config('FCM_SERVER_KEY')
+}
 
 # Application definition
 
@@ -43,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'fcm_django',
     'users',
     'events',
     'courses',

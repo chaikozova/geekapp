@@ -1,3 +1,4 @@
+from fcm_django.models import FCMDevice
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -19,6 +20,8 @@ def notification_send(req, mentors):
                     sender=sender)
         notification.save()
         serializer = CreateNotificationSerializer(notification)
+        devices = FCMDevice.objects.get(user=mentor)
+        devices.send_message(title="Notification", body=req.category)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
