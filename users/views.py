@@ -23,6 +23,7 @@ class LoginView(APIView):
     serializer_class = LoginSerializer
 
     def post(self, request):
+        global device
         fcm = request.data.get("fcm_token")
         user = authenticate(email=request.data.get("email"),
                             password=request.data.get("password"))
@@ -51,7 +52,11 @@ class LoginView(APIView):
                 print(token.key)
                 print(user)
 
-            return Response({"token": token.key, "error": False})
+            return Response({
+                "token": token.key,
+                "device_id": device.registration_id,
+                "error": False
+                             })
         else:
             data = {
                 "error": True,
@@ -97,6 +102,7 @@ class UserRegistrationView(APIView):
                 return Response(
                     {
                         "token": token.key,
+                        "device_id": device.registration_id,
                         "error": False
                     }, status=status.HTTP_201_CREATED)
             else:
