@@ -1,4 +1,6 @@
+from firebase_admin import messaging
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
 from requests.models import Notification
@@ -10,8 +12,10 @@ def notification_send(req, mentors):
     sender = req.student
     message = req.problem_title
     type = req.category
+    registration_tokens = []
     for mentor in mentors:
         print(mentor)
+        registration_tokens.append(Token.objects.get(user=mentor))
         notification = Notification.objects.create(
                     recipients=User.objects.get(id=mentor),
                     message=message,
@@ -19,6 +23,12 @@ def notification_send(req, mentors):
                     sender=sender)
         notification.save()
         serializer = CreateNotificationSerializer(notification)
+    message = messaging.MulticastMessage(
+        data={'sender': sender.name, 'type': type, 'message': message},
+        tokens=registration_tokens,
+    )
+    response = messaging.send_multicast(message)
+    print('{0} messages were sent successfully'.format(response.success_count))
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
