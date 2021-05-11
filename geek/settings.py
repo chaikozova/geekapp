@@ -12,12 +12,18 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import firebase_admin
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+from firebase_admin import credentials
+
+cred = credentials.Certificate("/Users/chaikozova/Downloads/geekapp-7fdb8-firebase-adminsdk-ln7pu-a94f950065.json")
+# firebase_admin.initialize_app(cred)
+default_app = firebase_admin.initialize_app()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -33,8 +39,6 @@ ALLOWED_HOSTS = ['*']
 FCM_DJANGO_SETTINGS = {
     "FCM_SERVER_KEY": config('FCM_SERVER_KEY')
 }
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -90,7 +94,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'geek.wsgi.application'
 ASGI_APPLICATION = 'geek.routing.application'
 
-
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
     'users.hashers.PBKDF2WrappedSHA1PasswordHasher',
@@ -117,8 +120,6 @@ DATABASES = {
     }
 }
 
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -137,7 +138,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -150,7 +150,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -173,17 +172,15 @@ REST_FRAMEWORK = {
 
 }
 
-
 AUTH_USER_MODEL = 'users.User'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 
 # Heroku: Update database configuration from $DATABASE_URL.
 import dj_database_url
+
 db_from_env = dj_database_url.config()
 DATABASES['default'].update(db_from_env)
