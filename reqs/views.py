@@ -4,9 +4,9 @@ from rest_framework.views import APIView
 
 from chat.models import Room
 from chat.serializers import RoomListSerializer, RoomSerializer
-from requests.models import Request, Notification
-from requests.notification_create import notification_send, notification_from_mentor
-from requests.serializers import CreateRequestSerializer, CreateNotificationSerializer, NotificationListSerializer
+from reqs.models import Request, Notification
+from reqs.notification_create import notification_send, notification_from_mentor
+from reqs.serializers import CreateRequestSerializer, CreateNotificationSerializer, NotificationListSerializer
 from courses.models import GroupLevel
 from users.models import User
 

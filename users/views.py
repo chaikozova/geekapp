@@ -1,4 +1,6 @@
+from django.contrib.auth import authenticate
 from django.http import Http404
+from fcm_django.models import FCMDevice
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import UpdateModelMixin
 
@@ -6,7 +8,7 @@ from .mentor_comment import MentorComment
 from .serializers import UserRegistrationSerializer, LoginSerializer, \
     UserListSerializer, UserRetrieveUpdateDeleteSerializer, ChangePasswordSerializer, \
     MentorCommentSerializer, EmailUpdateSerializer, ImageUpdateSerializer, UserMainInfoUpdateSerializer, \
-    UserSocialMediaInfoUpdateSerializer, IsMentorSerializer
+    UserSocialMediaInfoUpdateSerializer, IsMentorSerializer, UserShortInfoSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, generics, mixins
 from rest_framework.authtoken.models import Token
@@ -21,13 +23,47 @@ class LoginView(APIView):
     serializer_class = LoginSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({'id': user.id, 'email': user.email,
-                         'user_type': user.user_type,
-                         'token': token.key}, status=status.HTTP_200_OK)
+        global device
+        fcm = request.data.get("fcm_token")
+        user = authenticate(email=request.data.get("email"),
+                            password=request.data.get("password"))
+        if user is not None:
+            ser = UserShortInfoSerializer(user)
+            fb = User.objects.get(id=user.id)
+            print(ser.data['id'])
+            try:
+                devices = FCMDevice.objects.get(user=ser.data['id'])
+            except FCMDevice.DoesNotExist:
+                devices = None
+            if devices is None:
+                device = FCMDevice()
+                device.user = user
+                device.registration_id = fcm
+                device.type = "Android"
+                device.name = "Can be anything"
+                device.save()
+            else:
+                devices.registration_id = fcm
+                devices.save()
+            try:
+                token = Token.objects.get(user_id=user.id)
+            except:
+                token = Token.objects.create(user=user)
+                print(token.key)
+                print(user)
+
+            return Response({
+                "token": token.key,
+                "device_id": device.registration_id,
+                "error": False
+                             })
+        else:
+            data = {
+                "error": True,
+                "msg": "User does not exist or password is wrong"
+            }
+
+            return Response(data, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class LogoutView(APIView):
@@ -51,9 +87,27 @@ class UserRegistrationView(APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response({"successful": True}, status=status.HTTP_201_CREATED)
-        return Response({"successful": False, **serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            user = serializer.save()
+            if user:
+                token = Token.objects.create(user=user)
+                json = serializer.data
+                fcm_token = json['fcm_token']
+                user = json['id']
+                device = FCMDevice()
+                device.registration_id = fcm_token
+                device.type = "Android"
+                device.name = "Can be anything"
+                device.user = user
+                device.save()
+                return Response(
+                    {
+                        "token": token.key,
+                        "device_id": device.registration_id,
+                        "error": False
+                    }, status=status.HTTP_201_CREATED)
+            else:
+                data = {"error": True, "errors": serializer.errors}
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ChangePasswordView(generics.UpdateAPIView):
