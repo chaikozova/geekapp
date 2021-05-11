@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'table',
     'chat',
     'channels',
-    'requests.apps.RequestsConfig',
+    'reqs.apps.RequestsConfig',
 ]
 
 MIDDLEWARE = [

@@ -3,8 +3,8 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
-from requests.models import Notification
-from requests.serializers import CreateNotificationSerializer
+from reqs.models import Notification
+from reqs.serializers import CreateNotificationSerializer
 from users.models import User
 
 
