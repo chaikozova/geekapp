@@ -21,6 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 from firebase_admin import credentials
 
+
 cred = credentials.Certificate("geekapp-7fdb8-firebase-adminsdk-ln7pu-a94f950065.json")
 # firebase_admin.initialize_app(cred)
 default_app = firebase_admin.initialize_app()
